@@ -14,12 +14,12 @@ export function registerListTools(
     body?: any
   ) => Promise<any>
 ) {
-  server.tool("getLists", { folderId: z.string() }, async ({ folderId }) => {
+  server.tool("getLists", { folder_id: z.string() }, async ({ folder_id }) => {
     const apiKey = getApiKey();
     if (!apiKey)
       return { content: [{ type: "text", text: "API key missing." }] };
     const result = await callClickUpApi(
-      `folder/${folderId}/list`,
+      `folder/${folder_id}/list`,
       "GET",
       apiKey
     );
@@ -29,16 +29,16 @@ export function registerListTools(
   server.tool(
     "createList",
     {
-      folderId: z.string(),
+      folder_id: z.string(),
       name: z.string(),
       content: z.string().optional(),
     },
-    async ({ folderId, name, content: listContent }) => {
+    async ({ folder_id, name, content: listContent }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const result = await callClickUpApi(
-        `folder/${folderId}/list`,
+        `folder/${folder_id}/list`,
         "POST",
         apiKey,
         { name, content: listContent }
@@ -49,13 +49,13 @@ export function registerListTools(
 
   server.tool(
     "getFolderlessList",
-    { spaceId: z.string() },
-    async ({ spaceId }) => {
+    { space_id: z.string() },
+    async ({ space_id }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const result = await callClickUpApi(
-        `space/${spaceId}/list`,
+        `space/${space_id}/list`,
         "GET",
         apiKey
       );
@@ -63,37 +63,37 @@ export function registerListTools(
     }
   );
 
-  server.tool("getList", { listId: z.string() }, async ({ listId }) => {
+  server.tool("getList", { list_id: z.string() }, async ({ list_id }) => {
     const apiKey = getApiKey();
     if (!apiKey)
       return { content: [{ type: "text", text: "API key missing." }] };
-    const result = await callClickUpApi(`list/${listId}`, "GET", apiKey);
+    const result = await callClickUpApi(`list/${list_id}`, "GET", apiKey);
     return { content: [{ type: "text", text: JSON.stringify(result) }] };
   });
 
   server.tool(
     "updateList",
     {
-      listId: z.string(),
+      list_id: z.string(),
       name: z.string().optional(),
       content: z.string().optional(),
-      dueDate: z.number().optional(),
-      dueDateTime: z.boolean().optional(),
+      due_date: z.number().optional(),
+      due_date_time: z.boolean().optional(),
       priority: z.number().optional(),
       assignee: z.string().optional(),
       status: z.string().optional(),
-      unsetStatus: z.boolean().optional(),
+      unset_status: z.boolean().optional(),
     },
     async ({
-      listId,
+      list_id,
       name,
       content,
-      dueDate,
-      dueDateTime,
+      due_date,
+      due_date_time,
       priority,
       assignee,
       status,
-      unsetStatus,
+      unset_status,
     }) => {
       const apiKey = getApiKey();
       if (!apiKey)
@@ -101,14 +101,14 @@ export function registerListTools(
       const body: any = {};
       if (name !== undefined) body.name = name;
       if (content !== undefined) body.content = content;
-      if (dueDate !== undefined) body.due_date = dueDate;
-      if (dueDateTime !== undefined) body.due_date_time = dueDateTime;
+      if (due_date !== undefined) body.due_date = due_date;
+      if (due_date_time !== undefined) body.due_date_time = due_date_time;
       if (priority !== undefined) body.priority = priority;
       if (assignee !== undefined) body.assignee = assignee;
       if (status !== undefined) body.status = status;
-      if (unsetStatus !== undefined) body.unset_status = unsetStatus;
+      if (unset_status !== undefined) body.unset_status = unset_status;
       const result = await callClickUpApi(
-        `list/${listId}`,
+        `list/${list_id}`,
         "PUT",
         apiKey,
         body
@@ -117,11 +117,11 @@ export function registerListTools(
     }
   );
 
-  server.tool("deleteList", { listId: z.string() }, async ({ listId }) => {
+  server.tool("deleteList", { list_id: z.string() }, async ({ list_id }) => {
     const apiKey = getApiKey();
     if (!apiKey)
       return { content: [{ type: "text", text: "API key missing." }] };
-    const result = await callClickUpApi(`list/${listId}`, "DELETE", apiKey);
+    const result = await callClickUpApi(`list/${list_id}`, "DELETE", apiKey);
     return { content: [{ type: "text", text: JSON.stringify(result) }] };
   });
 

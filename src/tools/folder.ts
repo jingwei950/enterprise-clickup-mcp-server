@@ -91,14 +91,14 @@ export function registerFolderTools(
   server.tool(
     "getFolders",
     "Fetch all folders in the specified space",
-    { spaceId: z.string() },
-    async ({ spaceId }) => {
+    { space_id: z.string() },
+    async ({ space_id }) => {
       const apiKey = getApiKey();
       if (!apiKey) {
         return { content: [{ type: "text", text: "API key missing." }] };
       }
       const result = await callClickUpApi(
-        `space/${spaceId}/folder`,
+        `space/${space_id}/folder`,
         "GET",
         apiKey
       );
@@ -109,14 +109,14 @@ export function registerFolderTools(
   server.tool(
     "createFolder",
     "Create a new folder in the specified space with a given name",
-    { spaceId: z.string(), name: z.string() },
-    async ({ spaceId, name }) => {
+    { space_id: z.string(), name: z.string() },
+    async ({ space_id, name }) => {
       const apiKey = getApiKey();
       if (!apiKey) {
         return { content: [{ type: "text", text: "API key missing." }] };
       }
       const result = await callClickUpApi(
-        `space/${spaceId}/folder`,
+        `space/${space_id}/folder`,
         "POST",
         apiKey,
         { name }
@@ -128,13 +128,13 @@ export function registerFolderTools(
   server.tool(
     "getFolder",
     "Fetch metadata for a specific folder",
-    { folderId: z.string() },
-    async ({ folderId }) => {
+    { folder_id: z.string() },
+    async ({ folder_id }) => {
       const apiKey = getApiKey();
       if (!apiKey) {
         return { content: [{ type: "text", text: "API key missing." }] };
       }
-      const result = await callClickUpApi(`folder/${folderId}`, "GET", apiKey);
+      const result = await callClickUpApi(`folder/${folder_id}`, "GET", apiKey);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
     }
   );
@@ -142,15 +142,20 @@ export function registerFolderTools(
   server.tool(
     "updateFolder",
     "Update the name of a specific folder",
-    { folderId: z.string(), name: z.string() },
-    async ({ folderId, name }) => {
+    { folder_id: z.string(), name: z.string() },
+    async ({ folder_id, name }) => {
       const apiKey = getApiKey();
       if (!apiKey) {
         return { content: [{ type: "text", text: "API key missing." }] };
       }
-      const result = await callClickUpApi(`folder/${folderId}`, "PUT", apiKey, {
-        name,
-      });
+      const result = await callClickUpApi(
+        `folder/${folder_id}`,
+        "PUT",
+        apiKey,
+        {
+          name,
+        }
+      );
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
     }
   );
@@ -158,14 +163,14 @@ export function registerFolderTools(
   server.tool(
     "deleteFolder",
     "Delete a specific folder",
-    { folderId: z.string() },
-    async ({ folderId }) => {
+    { folder_id: z.string() },
+    async ({ folder_id }) => {
       const apiKey = getApiKey();
       if (!apiKey) {
         return { content: [{ type: "text", text: "API key missing." }] };
       }
       const result = await callClickUpApi(
-        `folder/${folderId}`,
+        `folder/${folder_id}`,
         "DELETE",
         apiKey
       );

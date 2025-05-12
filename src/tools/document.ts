@@ -137,7 +137,7 @@ export function registerDocTools(
     "searchDocs",
     "Search documents in a workspace with optional filters",
     {
-      workspaceId: z.number(),
+      workspace_id: z.number(),
       id: z.string().optional(),
       creator: z.number().optional(),
       deleted: z.boolean().optional(),
@@ -148,7 +148,7 @@ export function registerDocTools(
       next_cursor: z.string().optional(),
     },
     async ({
-      workspaceId,
+      workspace_id,
       id,
       creator,
       deleted,
@@ -172,7 +172,7 @@ export function registerDocTools(
       if (next_cursor) qs.set("next_cursor", next_cursor);
       const qstr = qs.toString() ? `?${qs.toString()}` : "";
       const result = await callClickUpApi(
-        `/v3/workspaces/${workspaceId}/docs${qstr}`,
+        `/v3/workspaces/${workspace_id}/docs${qstr}`,
         "GET",
         apiKey
       );
@@ -184,20 +184,20 @@ export function registerDocTools(
     "createDoc",
     "Create a new document in a workspace",
     {
-      workspaceId: z.string(),
+      workspace_id: z.string(),
       title: z.string(),
       content: z.string().optional(),
-      parentDoc: z.string().optional(),
+      parent_doc: z.string().optional(),
     },
-    async ({ workspaceId, title, content: bodyContent, parentDoc }) => {
+    async ({ workspace_id, title, content: bodyContent, parent_doc }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const docData: any = { title };
       if (bodyContent) docData.content = bodyContent;
-      if (parentDoc) docData.parentDoc = parentDoc;
+      if (parent_doc) docData.parent_doc = parent_doc;
       const result = await callClickUpApi(
-        `team/${workspaceId}/doc`,
+        `team/${workspace_id}/doc`,
         "POST",
         apiKey,
         docData
@@ -209,13 +209,13 @@ export function registerDocTools(
   server.tool(
     "getDoc",
     "Fetch metadata for a specific document",
-    { workspaceId: z.number(), docId: z.string() },
-    async ({ workspaceId, docId }) => {
+    { workspace_id: z.number(), doc_id: z.string() },
+    async ({ workspace_id, doc_id }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const result = await callClickUpApi(
-        `/v3/workspaces/${workspaceId}/docs/${docId}`,
+        `/v3/workspaces/${workspace_id}/docs/${doc_id}`,
         "GET",
         apiKey
       );
@@ -227,12 +227,12 @@ export function registerDocTools(
     "getDocPages",
     "Fetch pages of a specific document with formatting options",
     {
-      workspaceId: z.number(),
-      docId: z.string(),
+      workspace_id: z.number(),
+      doc_id: z.string(),
       max_page_depth: z.number().optional(),
       content_format: z.string().optional(),
     },
-    async ({ workspaceId, docId, max_page_depth, content_format }) => {
+    async ({ workspace_id, doc_id, max_page_depth, content_format }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
@@ -241,7 +241,7 @@ export function registerDocTools(
       qs.set("content_format", content_format ?? "text/md");
       const qstr = qs.toString() ? `?${qs.toString()}` : "";
       const result = await callClickUpApi(
-        `/v3/workspaces/${workspaceId}/docs/${docId}/pages${qstr}`,
+        `/v3/workspaces/${workspace_id}/docs/${doc_id}/pages${qstr}`,
         "GET",
         apiKey
       );

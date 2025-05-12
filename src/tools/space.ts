@@ -50,14 +50,14 @@ export function registerSpaceTools(
   server.tool(
     "getSpaces",
     "Fetch all spaces in a workspace",
-    { teamId: z.number(), archived: z.boolean().optional() },
-    async ({ teamId, archived }) => {
+    { team_id: z.number(), archived: z.boolean().optional() },
+    async ({ team_id, archived }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const query = archived !== undefined ? `?archived=${archived}` : "";
       const result = await callClickUpApi(
-        `team/${teamId}/space${query}`,
+        `team/${team_id}/space${query}`,
         "GET",
         apiKey
       );
@@ -69,42 +69,42 @@ export function registerSpaceTools(
     "createSpace",
     "Create a new space in the specified workspace with given features",
     {
-      workspaceId: z.string(),
+      workspace_id: z.string(),
       name: z.string(),
-      multipleAssignees: z.boolean(),
+      multiple_assignees: z.boolean(),
       features: z.object({
-        dueDates: z.object({ enabled: z.boolean() }),
-        timeTracking: z.object({ enabled: z.boolean() }),
+        due_dates: z.object({ enabled: z.boolean() }),
+        time_tracking: z.object({ enabled: z.boolean() }),
         tags: z.object({ enabled: z.boolean() }),
-        timeEstimates: z.object({ enabled: z.boolean() }),
+        time_estimates: z.object({ enabled: z.boolean() }),
         checklists: z.object({ enabled: z.boolean() }),
-        customFields: z.object({ enabled: z.boolean() }),
-        remapDependencies: z.object({ enabled: z.boolean() }),
-        dependencyWarning: z.object({ enabled: z.boolean() }),
+        custom_fields: z.object({ enabled: z.boolean() }),
+        remap_dependencies: z.object({ enabled: z.boolean() }),
+        dependency_warning: z.object({ enabled: z.boolean() }),
         portfolios: z.object({ enabled: z.boolean() }),
       }),
     },
-    async ({ workspaceId, name, multipleAssignees, features }) => {
+    async ({ workspace_id, name, multiple_assignees, features }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
       const payload = {
         name,
-        multiple_assignees: multipleAssignees,
+        multiple_assignees: multiple_assignees,
         features: {
-          due_dates: features.dueDates,
-          time_tracking: features.timeTracking,
+          due_dates: features.due_dates,
+          time_tracking: features.time_tracking,
           tags: features.tags,
-          time_estimates: features.timeEstimates,
+          time_estimates: features.time_estimates,
           checklists: features.checklists,
-          custom_fields: features.customFields,
-          remap_dependencies: features.remapDependencies,
-          dependency_warning: features.dependencyWarning,
+          custom_fields: features.custom_fields,
+          remap_dependencies: features.remap_dependencies,
+          dependency_warning: features.dependency_warning,
           portfolios: features.portfolios,
         },
       };
       const result = await callClickUpApi(
-        `team/${workspaceId}/space`,
+        `team/${workspace_id}/space`,
         "POST",
         apiKey,
         payload
@@ -116,12 +116,12 @@ export function registerSpaceTools(
   server.tool(
     "getSpace",
     "Fetch metadata for a specific space",
-    { spaceId: z.string() },
-    async ({ spaceId }) => {
+    { space_id: z.string() },
+    async ({ space_id }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return { content: [{ type: "text", text: "API key missing." }] };
-      const result = await callClickUpApi(`space/${spaceId}`, "GET", apiKey);
+      const result = await callClickUpApi(`space/${space_id}`, "GET", apiKey);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
     }
   );
@@ -130,31 +130,31 @@ export function registerSpaceTools(
     "updateSpace",
     "Update properties of a specific space",
     {
-      spaceId: z.string(),
+      space_id: z.string(),
       name: z.string(),
       color: z.string().optional(),
-      isPrivate: z.boolean(),
-      adminCanManage: z.boolean().optional(),
-      multipleAssignees: z.boolean().optional(),
+      is_private: z.boolean(),
+      admin_can_manage: z.boolean().optional(),
+      multiple_assignees: z.boolean().optional(),
       features: z.object({
-        dueDates: z.object({ enabled: z.boolean() }),
-        timeTracking: z.object({ enabled: z.boolean() }),
+        due_dates: z.object({ enabled: z.boolean() }),
+        time_tracking: z.object({ enabled: z.boolean() }),
         tags: z.object({ enabled: z.boolean() }),
-        timeEstimates: z.object({ enabled: z.boolean() }),
+        time_estimates: z.object({ enabled: z.boolean() }),
         checklists: z.object({ enabled: z.boolean() }),
-        customFields: z.object({ enabled: z.boolean() }),
-        remapDependencies: z.object({ enabled: z.boolean() }),
-        dependencyWarning: z.object({ enabled: z.boolean() }),
+        custom_fields: z.object({ enabled: z.boolean() }),
+        remap_dependencies: z.object({ enabled: z.boolean() }),
+        dependency_warning: z.object({ enabled: z.boolean() }),
         portfolios: z.object({ enabled: z.boolean() }),
       }),
     },
     async ({
-      spaceId,
+      space_id,
       name,
       color,
-      isPrivate,
-      adminCanManage,
-      multipleAssignees,
+      is_private,
+      admin_can_manage,
+      multiple_assignees,
       features,
     }) => {
       const apiKey = getApiKey();
@@ -163,23 +163,23 @@ export function registerSpaceTools(
       const payload = {
         name,
         color: color || "#7B68EE",
-        private: isPrivate,
-        admin_can_manage: adminCanManage,
-        multiple_assignees: multipleAssignees,
+        private: is_private,
+        admin_can_manage,
+        multiple_assignees,
         features: {
-          due_dates: features.dueDates,
-          time_tracking: features.timeTracking,
+          due_dates: features.due_dates,
+          time_tracking: features.time_tracking,
           tags: features.tags,
-          time_estimates: features.timeEstimates,
+          time_estimates: features.time_estimates,
           checklists: features.checklists,
-          custom_fields: features.customFields,
-          remap_dependencies: features.remapDependencies,
-          dependency_warning: features.dependencyWarning,
+          custom_fields: features.custom_fields,
+          remap_dependencies: features.remap_dependencies,
+          dependency_warning: features.dependency_warning,
           portfolios: features.portfolios,
         },
       };
       const result = await callClickUpApi(
-        `space/${spaceId}`,
+        `space/${space_id}`,
         "PUT",
         apiKey,
         payload
@@ -191,8 +191,8 @@ export function registerSpaceTools(
   server.tool(
     "deleteSpace",
     "Delete a specific space",
-    { spaceId: z.string() },
-    async ({ spaceId }) => {
+    { space_id: z.string() },
+    async ({ space_id }) => {
       const apiKey = getApiKey();
       if (!apiKey)
         return {
@@ -203,7 +203,11 @@ export function registerSpaceTools(
             },
           ],
         };
-      const result = await callClickUpApi(`space/${spaceId}`, "DELETE", apiKey);
+      const result = await callClickUpApi(
+        `space/${space_id}`,
+        "DELETE",
+        apiKey
+      );
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
     }
   );
