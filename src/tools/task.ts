@@ -124,8 +124,6 @@ export function registerTaskTools(
       });
       const qstr = query.toString() ? `?${query.toString()}` : "";
 
-      console.log(`list/${list_id}/task${qstr}`);
-
       const result = await callClickUpApi(
         `list/${list_id}/task${qstr}`,
         "GET",
@@ -330,7 +328,6 @@ export function registerTaskTools(
       let page = 0;
       let collectedTasks: any[] = [];
       while (true) {
-        console.log("page", page);
         const pageQuery = new URLSearchParams({
           archived: "false",
           subtasks: "true",
